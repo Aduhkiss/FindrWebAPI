@@ -13,6 +13,9 @@ public class AtticusRequest {
 	private int code;
 	private String agent;
 	
+	// Built specifically for the FinderWebAPI
+	private String authorization;
+	
 	public AtticusRequest(String url) {
 		this.url = url;
 		this.agent = "AtticusAPI";
@@ -23,11 +26,20 @@ public class AtticusRequest {
 		this.agent = agent;
 	}
 	
+	public AtticusRequest(String url, String agent, String authorization) {
+		this.url = url;
+		this.agent = agent;
+		this.authorization = authorization;
+	}
+	
 	public void make() throws IOException {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", this.agent);
+        if(this.authorization != null) {
+        	con.setRequestProperty("Authorization", authorization);
+        }
         this.code = con.getResponseCode();
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
